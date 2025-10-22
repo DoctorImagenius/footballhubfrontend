@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #101215;
+
+  /* For mobile smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+  overflow-y: scroll;
+}
+
+/* For desktop & most Android browsers */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #101215;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #0073E6, #FFFFFF, #0073E6);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #00aeff73, #e0e0e0, #00aeff73);
+}
+
+/* For Firefox (desktop + Android mobile) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #0073E6 #101215;
+}
+
+/* Optional: Force custom scrollbar container for iOS Safari */
+.scroll-container {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@keyframes rgbBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
