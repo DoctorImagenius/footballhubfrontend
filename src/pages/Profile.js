@@ -581,7 +581,7 @@ export default function PlayerDetail() {
             border: "1px solid rgba(255,255,255,0.1)",
             display: "flex",
             flexDirection: "column",
-            maxHeight: "85vh",
+            maxHeight: "60vh",
           }}
         >
           {/* Header */}
@@ -689,10 +689,10 @@ export default function PlayerDetail() {
                       transform: "translate(-50%, -50%)",
                     }}
                   />
-                  <span style={{ visibility: "hidden" }}>Yes, Delete</span>
+                  <span style={{ visibility: "hidden" }}>Delete</span>
                 </>
               ) : (
-                "Yes, Delete"
+                "Delete"
               )}
             </Button>
           </Box>

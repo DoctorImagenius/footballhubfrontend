@@ -411,7 +411,7 @@ export default function TeamDetail() {
           fontWeight="bold"
           sx={{ mb: 2, textTransform: "uppercase" }}
         >
-          🧑‍🤝‍🧑 Team Players 🧑‍🤝‍🧑
+          🧑‍🤝‍🧑Team Players🧑‍🤝‍🧑
         </Typography>
         {canUpdate && (
           <Button
