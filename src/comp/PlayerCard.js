@@ -85,13 +85,15 @@ export default function PlayerCard({ player }) {
         image={player.imageUrl || "https://via.placeholder.com/260x160"}
         alt={player.name}
         sx={{
-          height: 160,
-          objectFit: "cover",
-          transition: "0.5s",
-          "&:hover": { transform: "scale(1.05)" },
+          height: 200, // fixed height for consistency
+          width: "100%",
+          objectFit: "cover", // show full image without zoom
           borderBottom: "3px solid rgba(255,255,255,0.1)",
+          transition: "transform 0.4s ease",
+          "&:hover": { transform: "scale(1.03)" }, // slight hover effect only
         }}
       />
+
 
       {/* Overall Rating & Position Badge */}
       <Tooltip
