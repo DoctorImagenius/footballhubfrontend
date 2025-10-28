@@ -88,8 +88,7 @@ export default function TeamDetail() {
         setSearchResults((prev) => prev.filter((p) => p.id !== playerId));
       }
     } catch (err) {
-      toast.error("Something went wrong, Please try again later!")
-
+      toast.error(err.response?.data?.message || "Something went wrong, Please try again later!")
     } finally {
       setInviting(null);
     }
