@@ -797,6 +797,7 @@ export default function PlayerDetail() {
 
               // ✅ Validation checks
               if (!name) return toast.error("Full name is required.");
+              if (/\s/.test(name)) return toast.error("Name cannot contain spaces.");
               if (isNaN(age) || age < 3 || age > 60)
                 return toast.error("Age must be between 10 and 50.");
               if (!/^\d{11}$/.test(mobileNumber))
@@ -869,34 +870,26 @@ export default function PlayerDetail() {
               {/* 🦶 Foot - Radio Buttons */}
               <Box>
                 <Typography sx={{ color: "gray", mb: 1 }}>Preferred Foot</Typography>
-                <RadioGroup row name="foot" defaultValue={currentPlayer.foot || ""}>
-                  {["Left", "Right", "Both"].map((opt) => (
+                <RadioGroup
+                  row
+                  name="foot"
+                  defaultValue={currentPlayer.foot || ""}
+                >
+                  {["left", "right", "both"].map((opt) => (
                     <FormControlLabel
                       key={opt}
                       value={opt}
                       control={<Radio sx={{ color: "#00e5ff" }} />}
-                      label={<Typography sx={{ color: "white" }}>{opt}</Typography>}
+                      label={
+                        <Typography sx={{ color: "white", textTransform: "capitalize" }}>
+                          {opt}
+                        </Typography>
+                      }
                     />
                   ))}
                 </RadioGroup>
-              </Box>
 
-              {/* ⚽ Position - Radio Buttons (hidden for Goalkeeper) */}
-              {currentPlayer.position !== "Goalkeeper" && (
-                <Box>
-                  <Typography sx={{ color: "gray", mb: 1 }}>Position</Typography>
-                  <RadioGroup row name="position" defaultValue={currentPlayer.position || ""}>
-                    {["Defender", "Midfielder", "Forward"].map((opt) => (
-                      <FormControlLabel
-                        key={opt}
-                        value={opt}
-                        control={<Radio sx={{ color: "#00e5ff" }} />}
-                        label={<Typography sx={{ color: "white" }}>{opt}</Typography>}
-                      />
-                    ))}
-                  </RadioGroup>
-                </Box>
-              )}
+              </Box>
 
               {/* 🔐 Password with Toggle */}
               <Box sx={{ position: "relative" }}>

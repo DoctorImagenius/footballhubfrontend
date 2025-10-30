@@ -82,7 +82,12 @@ export default function SignupForm() {
   // validation
   const validate = () => {
     let newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Required";
+    if (!formData.name.trim()) {
+      newErrors.name = "Required";
+    } else if (/\s/.test(formData.name)) {
+      newErrors.name = "Name cannot contain spaces";
+    }
+
     if (!formData.email.trim()) {
       newErrors.email = "Required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -155,8 +160,7 @@ export default function SignupForm() {
         navigate("/login");
 
       } catch (err) {
-      toast.error(err?.response?.data?.error || "Something went wrong, Please try again later!")
-
+        toast.error(err?.response?.data?.error || "Something went wrong, Please try again later!")
       } finally {
         setLoading(false);
       }
@@ -243,7 +247,16 @@ export default function SignupForm() {
           label="Full Name"
           name="name"
           value={formData.name}
-          onChange={handleChange}
+          onChange={(e) => {
+            const value = e.target.value;
+            // Prevent typing spaces directly
+            if (/\s/.test(value)) {
+              setErrors((prev) => ({ ...prev, name: "Name cannot contain spaces" }));
+            } else {
+              setErrors((prev) => ({ ...prev, name: "" }));
+            }
+            setFormData((prev) => ({ ...prev, name: value }));
+          }}
           fullWidth
           margin="normal"
           error={!!errors.name}
