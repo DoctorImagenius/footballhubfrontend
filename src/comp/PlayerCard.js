@@ -220,8 +220,15 @@ export default function PlayerCard({ player }) {
             </Box>
           ))}
         </Box>
-
-        <Box sx={{ mt: 1 }}>
+        <Box
+          sx={{
+            mt: 1,
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            flexDirection: "column",
+          }}
+        >
           <Rating
             name="player-rating"
             value={Number(player.ratingAvg) || 0}
@@ -229,6 +236,11 @@ export default function PlayerCard({ player }) {
             readOnly
             size="small"
           />
+          <Typography sx={{ color: "#dadadaff", fontSize: "0.9rem" }}>
+            {player.ratingCount > 0
+              ? `${(Number(player.ratingAvg) || 0).toFixed(1)}/5 (${player.ratingCount} reviews)`
+              : "No reviews yet"}
+          </Typography>
         </Box>
       </CardContent>
     </Card>
