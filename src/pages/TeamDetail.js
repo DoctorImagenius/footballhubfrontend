@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import {
@@ -55,6 +55,84 @@ export default function TeamDetail() {
   const [searchResults, setSearchResults] = useState([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [inviting, setInviting] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [loadingm, setLoadingm] = useState(true);
+  const [sending, setSending] = useState(false);
+  const chatRef = useRef(null);
+  const inputRef = useRef(null);
+
+  // ==== Fetch Messages ====
+  const fetchMessages = async (isInitial = false) => {
+    try {
+      if (!team?.id) return;
+
+      const res = await axios.get(
+        `https://footballhub.azurewebsites.net/teams/${team.id}/chat`,
+        { withCredentials: true }
+      );
+
+      if (res.data.success) {
+        const newData = res.data.data;
+
+        setMessages((prev) => {
+          if (isInitial || prev.length === 0) return newData;
+
+          const prevIds = new Set(prev.map((m) => m.id));
+          const fresh = newData.filter((m) => !prevIds.has(m.id));
+          if (fresh.length === 0) return prev;
+
+          return [...prev, ...fresh].slice(-20);
+        });
+      }
+    } catch (err) {
+      console.error("❌ Fetch messages error:", err);
+    } finally {
+      if (isInitial) setLoadingm(false);
+    }
+  };
+
+  // ==== Send Message ====
+  const handleSendMessage = async () => {
+    const text = inputRef.current?.value?.trim();
+    if (!text || sending) return;
+
+    setSending(true);
+    try {
+      await axios.post(
+        `https://footballhub.azurewebsites.net/teams/${team.id}/chat`,
+        { message: text },
+        { withCredentials: true }
+      );
+      inputRef.current.value = ""; // clear input
+      await fetchMessages(false);
+    } catch (err) {
+      console.error("❌ Send failed:", err);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  // ==== Auto Fetch & Scroll (only if member) ====
+  useEffect(() => {
+    if (!team?.id) return;
+    if (!team.teamPlayers?.includes(currentPlayer.email)) return; // ✅ only team members
+
+    fetchMessages(true);
+
+    const interval = setInterval(() => {
+      fetchMessages(false);
+    }, 5000);
+
+    return () => clearInterval(interval);
+    // eslint-disable-next-line
+  }, [team]);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [messages]);
+
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -739,6 +817,267 @@ export default function TeamDetail() {
         )}
 
       </Box>
+      <Divider sx={{ my: 5, borderColor: "rgba(255,255,255,0.2)" }} />
+      <>
+        {team.teamPlayers?.includes(currentPlayer.email) ? (
+          // ✅ Team Member: Show Chat Room
+          <Box
+            sx={{
+              background: "rgba(255,255,255,0.05)",
+              borderRadius: 3,
+              p: 0,
+              maxWidth: 700,
+              mx: "auto",
+              display: "flex",
+              flexDirection: "column",
+              boxShadow: "0 4px 25px rgba(0,0,0,0.3)",
+              overflow: "hidden",
+            }}
+          >
+            {/* 🔝 Sticky Header */}
+            <Box
+              sx={{
+                position: "sticky",
+                top: 0,
+                zIndex: 5,
+                textAlign: "center",
+                borderBottom: "1px solid rgba(255,255,255,0.15)",
+                backdropFilter: "blur(8px)",
+                py: 1.5,
+              }}
+            >
+              <Typography
+                variant="h5"
+                fontWeight="bold"
+                sx={{
+                  textTransform: "uppercase",
+                  letterSpacing: "2px",
+                  color: "#fff",
+                }}
+              >
+                💬 Team Chat Room
+              </Typography>
+
+              {/* ⚠️ Red Zone Banner */}
+              {messages.length >= 20 && (
+                <Typography
+                  sx={{
+                    mt: 0.5,
+                    color: "#ff7f7f",
+                    fontSize: "0.8rem",
+                    fontWeight: 500,
+                    background: "rgba(255,0,0,0.08)",
+                    border: "1px solid rgba(255,80,80,0.5)",
+                    borderRadius: 2,
+                    p: 0.6,
+                    mx: "auto",
+                    width: "90%",
+                    backdropFilter: "blur(5px)",
+                  }}
+                >
+                  ⚠️ Old messages auto-delete soon (20 limit)
+                </Typography>
+              )}
+            </Box>
+
+            {/* 🧾 Messages List */}
+            <Box
+              ref={chatRef}
+              sx={{
+                maxHeight: 320,
+                overflowY: "auto",
+                p: 2,
+                scrollBehavior: "smooth",
+              }}
+            >
+              {loadingm ? (
+                <Typography textAlign="center" color="gray">
+                  Loading messages...
+                </Typography>
+              ) : messages.length === 0 ? (
+                <Typography textAlign="center" color="gray">
+                  No messages yet.
+                </Typography>
+              ) : (
+                [...messages]
+                  .sort(
+                    (a, b) =>
+                      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+                  )
+                  .map((msg, index) => {
+                    const isYou = msg.sender === currentPlayer.email;
+                    const isRedZone =
+                      messages.length >= 20 &&
+                      (index === 0 || index === 1);
+
+                    return (
+                      <Box
+                        key={msg.id}
+                        sx={{
+                          textAlign: isYou ? "right" : "left",
+                          mb: 1.2,
+                          animation: "fadeIn 0.4s ease",
+                          "@keyframes fadeIn": {
+                            from: { opacity: 0, transform: "translateY(10px)" },
+                            to: { opacity: 1, transform: "translateY(0)" },
+                          },
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            display: "inline-block",
+                            background: isRedZone
+                              ? "rgba(255,255,255,0.08)"
+                              : isYou
+                                ? "linear-gradient(135deg, #00e5ff, #0077ff)"
+                                : "rgba(255,255,255,0.12)",
+                            color: "#fff",
+                            borderRadius: isYou ? "20px 2px 20px 20px" : "2px 20px 20px 20px",
+                            px: 1.5,
+                            py: 0.9,
+                            maxWidth: "70%",
+                            wordBreak: "break-word",
+                            fontSize: "0.92rem",
+                            position: "relative",
+                            transition: "0.3s ease",
+                            "&::after": isRedZone
+                              ? {
+                                content: '""',
+                                position: "absolute",
+                                inset: 0,
+                                background:
+                                  "linear-gradient(45deg, rgba(255,80,80,0.15), rgba(255,0,0,0.08))",
+                                borderRadius: isYou ? "20px 2px 20px 20px" : "2px 20px 20px 20px",
+
+                                animation: "glowMove 1.5s infinite ease-in-out",
+                                zIndex: -1,
+                              }
+                              : {},
+                            "@keyframes glowMove": {
+                              "0%": { opacity: 0.1 },
+                              "50%": { opacity: 1 },
+                              "100%": { opacity: 0.1 },
+                            },
+                          }}
+                        >
+                          {/* 💬 Message Text */}
+                          {msg.message}
+
+                          {/* 🕒 Timestamp inside bubble */}
+                          <Typography
+                            component="span"
+                            sx={{
+                              display: "block",
+                              textAlign: "right",
+                              color: "rgba(255,255,255,0.7)",
+                              fontSize: "0.65rem",
+                              mt: 0.5,
+                              fontStyle: "italic",
+                            }}
+                          >
+                            {new Date(msg.timestamp).toLocaleString("en-US", {
+                              hour: "numeric",
+                              minute: "2-digit",
+                              hour12: true, // ✅ 12-hour format with AM/PM
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </Typography>
+                        </Typography>
+
+
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            display: "block",
+                            color: isRedZone ? "#ff8080" : "gray",
+                            mt: 0.3,
+                            fontSize: "0.7rem",
+                          }}
+                        >
+                          {isYou ? "You" : msg.sender}
+                        </Typography>
+                      </Box>
+                    );
+                  })
+              )}
+            </Box>
+
+            {/* ✍️ Message Input */}
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                p: 2,
+                borderTop: "1px solid rgba(255,255,255,0.1)",
+                alignItems: "center",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              <TextField
+                fullWidth
+                inputRef={inputRef}
+                placeholder="Type your message..."
+                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                InputProps={{
+                  sx: {
+                    color: "white",
+                    borderRadius: 3,
+                    bgcolor: "rgba(255,255,255,0.08)",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255,255,255,0.2)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00e5ff",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#00e5ff",
+                    },
+                  },
+                }}
+                disabled={sending}
+              />
+              <Button
+                variant="contained"
+                disabled={sending}
+                onClick={handleSendMessage}
+                sx={{
+                  background: sending
+                    ? "rgba(255,255,255,0.2)"
+                    : "linear-gradient(135deg, #00e5ff, #0077ff)",
+                  borderRadius: 3,
+                  fontWeight: "bold",
+                  px: 3,
+                  minWidth: 90,
+                  height: 55,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "0.3s",
+                  "&:hover": {
+                    background: "linear-gradient(135deg, #00bcd4, #0040ff)",
+                  },
+                }}
+              >
+                {sending ? (
+                  <CircularProgress size={22} sx={{ color: "white" }} />
+                ) : (
+                  "Send"
+                )}
+              </Button>
+            </Box>
+          </Box>
+        ) : (
+          // 🚫 Not a team member
+          <Typography
+            textAlign="center"
+            sx={{ mt: 4, color: "gray", fontStyle: "italic" }}
+          >
+            🔒 Join the team to access the chat room.
+          </Typography>
+        )}
+      </>
       <Divider sx={{ my: 5, mb: 10, borderColor: "rgba(255,255,255,0.2)" }} />
       <Dialog
         open={showInviteBox}
