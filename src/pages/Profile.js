@@ -163,7 +163,7 @@ export default function PlayerDetail() {
 
     try {
       setLoadingDel(true);
-      const res = await axios.post("https://footballhub.azurewebsites.net/profile", {
+      const res = await axios.post("https://footballhub.azurewebsites.net/profile",{}, {
         withCredentials: true,
       });
 

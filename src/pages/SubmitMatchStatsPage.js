@@ -74,6 +74,7 @@ export default function SubmitMatchStatsPage() {
                 toast.success("Match stats submitted successfully");
                 await axios.post(
                     `https://footballhub.azurewebsites.net/players/${playerEmail}/notifications/${notifId}`,
+                    {},
                     { withCredentials: true }
                 );
                 setCurrentPlayer((prev) => ({

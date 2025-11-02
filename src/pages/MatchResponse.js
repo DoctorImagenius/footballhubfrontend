@@ -83,7 +83,7 @@ export default function MatchResponse() {
       );
 
       if (res.data.success) {
-        await axios.post(`https://footballhub.azurewebsites.net/players/${playerEmail}/notifications/${notifId}`, { withCredentials: true });
+        await axios.post(`https://footballhub.azurewebsites.net/players/${playerEmail}/notifications/${notifId}`,{}, { withCredentials: true });
         // ✅ Update currentPlayer state (remove from notifications)
         setCurrentPlayer((prev) => ({
           ...prev,

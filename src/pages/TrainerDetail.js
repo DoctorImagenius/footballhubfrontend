@@ -52,6 +52,7 @@ export default function TrainerDetail() {
 
   useEffect(() => {
     if (!trainerFromState) fetchTrainer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchTrainer = async () => {
@@ -789,7 +790,7 @@ export default function TrainerDetail() {
               onClick={async () => {
                 try {
                   setSaving(true);
-                  await axios.post("https://footballhub.azurewebsites.net/trainer", {
+                  await axios.post("https://footballhub.azurewebsites.net/trainer",{}, {
                     withCredentials: true,
                   });
                   toast.success("Trainer deleted");

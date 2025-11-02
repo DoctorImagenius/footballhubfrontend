@@ -139,6 +139,7 @@ export default function NotificationPage() {
 
       const res = await axios.post(
         `https://footballhub.azurewebsites.net/players/${currentPlayer.email}/notifications`,
+        {},
         { withCredentials: true }
       );
 
@@ -405,6 +406,7 @@ export default function NotificationPage() {
       setDeleting((prev) => ({ ...prev, [notifId]: true }));
       await axios.post(
         `https://footballhub.azurewebsites.net/players/${currentPlayer.email}/notifications/${notifId}`,
+        {},
         { withCredentials: true }
       );
 
