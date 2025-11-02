@@ -7,17 +7,8 @@ export const FootballProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showNotice, setShowNotice] = useState(false);
   
   useEffect(() => {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    // Detect iPhone or Safari
-    const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
-    const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
-    if (isIOS || isSafari) {
-      setShowNotice(true);
-    }
-
     const fetchProfile = async () => {
       try {
         const res = await axios.get("https://footballhub.azurewebsites.net/profile", {
@@ -49,8 +40,6 @@ export const FootballProvider = ({ children }) => {
         currentPlayer,
         setCurrentPlayer,
         loading,
-        showNotice,
-        setShowNotice,
       }}
     >
       {children}

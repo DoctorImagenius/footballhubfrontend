@@ -5,7 +5,6 @@ import {
   Button,
   useMediaQuery,
   useTheme,
-  IconButton
 } from "@mui/material";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -13,9 +12,6 @@ import Counter from "../comp/Counter";
 import FeaturesSection from "../comp/FeaturesSection";
 import OurTeam from "../comp/OurTeam";
 import Footer from "../comp/Footer";
-import CloseIcon from "@mui/icons-material/Close";
-import { useFootball } from "../FootballContext";
-
 
 export default function Home() {
   const navigate = useNavigate();
@@ -24,7 +20,6 @@ export default function Home() {
   const scale = useTransform(scrollY, [0, 300], [1, 1.3]); // Parallax zoom effect
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // 📱 Detect mobile
-  const { showNotice, setShowNotice } = useFootball();
 
   return (
     <Box sx={{ color: "white", overflowX: "hidden" }}>
@@ -32,64 +27,7 @@ export default function Home() {
       {/* Desktop / Laptop Hero */}
       {!isMobile && (
         <>
-          {showNotice && (
-            <Box
-              sx={{
-                position: "fixed", // stays on top
-                top: 70,
-                left: "50%",
-                transform: "translateX(-50%)",
-                mx: "auto",
-                mt: 1.5,
-                width: { xs: "90%", sm: "70%", md: "55%" }, // ✅ proper full responsive width
-                border: "1.2px solid rgba(255,255,255,0.25)",
-                borderRadius: "12px",
-                py: { xs: 0.8, sm: 1 },
-                px: { xs: 1.5, sm: 2.5 },
-                textAlign: "center",
-                color: "rgba(255,255,255,0.9)",
-                fontFamily: "'Poppins', sans-serif",
-                fontSize: { xs: "0.65rem", sm: "0.8rem" },
-                backdropFilter: "blur(8px)",
-                background: "rgba(255,255,255,0.05)",
-                zIndex: 9999,
-                boxShadow: "0 0 8px rgba(0,0,0,0.3)",
-                lineHeight: 1.5,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <Typography
-                component="span"
-                sx={{
-                  color: "rgba(255,255,255,0.85)",
-                  fontWeight: 300,
-                  width: "90%", // ✅ takes full width for text
-                }}
-              >
-                ⚠️ Some features like{" "}
-                <strong style={{ color: "#00e5ff" }}>update</strong> and{" "}
-                <strong style={{ color: "#00e5ff" }}>delete</strong> may not work properly
-                on <strong>iPhone</strong> or <strong>Safari</strong>. We're fixing it soon! 🙏
-              </Typography>
-
-              <IconButton
-                onClick={() => setShowNotice(false)}
-                sx={{
-                  position: "absolute",
-                  right: 8,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "#00e5ff",
-                  "&:hover": { color: "#00bcd4" },
-                }}
-              >
-                <CloseIcon sx={{ fontSize: "1rem" }} />
-              </IconButton>
-            </Box>
-          )}
+          
           <Box
             ref={ref}
             sx={{
@@ -262,66 +200,6 @@ export default function Home() {
 
       {/* Mobile Hero (📱) */}
       {isMobile && (
-        <>
-          {showNotice && (
-            <Box
-              sx={{
-                position: "fixed", // stays on top
-                top: { xs: 50, sm: 20 },
-                left: "50%",
-                transform: "translateX(-50%)",
-                mx: "auto",
-                mt: 1.5,
-                width: { xs: "90%", sm: "70%", md: "55%" }, // ✅ proper full responsive width
-                border: "1.2px solid rgba(255,255,255,0.25)",
-                borderRadius: "12px",
-                py: { xs: 0.8, sm: 1 },
-                px: { xs: 1.5, sm: 2.5 },
-                textAlign: "center",
-                color: "rgba(255,255,255,0.9)",
-                fontFamily: "'Poppins', sans-serif",
-                fontSize: { xs: "0.65rem", sm: "0.8rem" },
-                backdropFilter: "blur(8px)",
-                background: "rgba(255,255,255,0.05)",
-                zIndex: 9999,
-                boxShadow: "0 0 8px rgba(0,0,0,0.3)",
-                lineHeight: 1.5,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <Typography
-                component="span"
-                sx={{
-                  color: "rgba(255,255,255,0.85)",
-                  fontWeight: 300,
-                  width: "90%", // ✅ takes full width for text
-                }}
-              >
-                ⚠️ Some features like{" "}
-                <strong style={{ color: "#00e5ff" }}>update</strong> and{" "}
-                <strong style={{ color: "#00e5ff" }}>delete</strong> may not work properly
-                on <strong>iPhone</strong> or <strong>Safari</strong>. We're fixing it soon! 🙏
-              </Typography>
-
-              <IconButton
-                onClick={() => setShowNotice(false)}
-                sx={{
-                  position: "absolute",
-                  right: 8,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "#00e5ff",
-                  "&:hover": { color: "#00bcd4" },
-                }}
-              >
-                <CloseIcon sx={{ fontSize: "1rem" }} />
-              </IconButton>
-            </Box>
-          )}
-
           <Box
             ref={ref}
             sx={{
@@ -414,8 +292,6 @@ export default function Home() {
               </Box>
             </Box>
           </Box>
-        </>
-
       )}
 
       {/* 🌍 ABOUT SECTION */}
