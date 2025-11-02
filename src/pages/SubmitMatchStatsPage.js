@@ -64,7 +64,7 @@ export default function SubmitMatchStatsPage() {
         try {
             setLoading(true);
 
-            const res = await axios.put(
+            const res = await axios.post(
                 `https://footballhub.azurewebsites.net/matches/${match.id}/finalize`,
                 { teamStats: playerStats, teamRate },
                 { withCredentials: true }
@@ -72,7 +72,7 @@ export default function SubmitMatchStatsPage() {
 
             if (res.data.success) {
                 toast.success("Match stats submitted successfully");
-                await axios.delete(
+                await axios.post(
                     `https://footballhub.azurewebsites.net/players/${playerEmail}/notifications/${notifId}`,
                     { withCredentials: true }
                 );

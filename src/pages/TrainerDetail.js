@@ -92,7 +92,7 @@ export default function TrainerDetail() {
     }
     try {
       setSaving(true);
-      const res = await axios.put("https://footballhub.azurewebsites.net/trainer", formData, {
+      const res = await axios.post("https://footballhub.azurewebsites.net/trainer", formData, {
         withCredentials: true,
       });
       setTrainer(res.data.data);
@@ -789,7 +789,7 @@ export default function TrainerDetail() {
               onClick={async () => {
                 try {
                   setSaving(true);
-                  await axios.delete("https://footballhub.azurewebsites.net/trainer", {
+                  await axios.post("https://footballhub.azurewebsites.net/trainer", {
                     withCredentials: true,
                   });
                   toast.success("Trainer deleted");

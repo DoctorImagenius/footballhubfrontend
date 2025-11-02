@@ -176,7 +176,7 @@ export default function TeamDetail() {
     try {
       setLeaveLoading(true);
 
-      const res = await axios.delete(
+      const res = await axios.post(
         `https://footballhub.azurewebsites.net/teams/${team.id}/leave`,
         { withCredentials: true }
       );
@@ -211,7 +211,7 @@ export default function TeamDetail() {
   const handleRemovePlayer = async (email) => {
     try {
       setRemoveLoading(email);
-      await axios.put(
+      await axios.post(
         `https://footballhub.azurewebsites.net/teams/${team.id}`,
         { removePlayer: email },
         { withCredentials: true }
@@ -1476,7 +1476,7 @@ function EditTeamBox({ team, onUpdated, players }) {
   const handleDelete = async () => {
     try {
       setDeleting(true);
-      const res = await axios.delete(`https://footballhub.azurewebsites.net/teams/${team.id}`, {
+      const res = await axios.post(`https://footballhub.azurewebsites.net/teams/${team.id}`, {
         withCredentials: true,
       });
 
@@ -1526,7 +1526,7 @@ function EditTeamBox({ team, onUpdated, players }) {
       if (captain.trim()) formData.append("newCaptain", captain.trim());
       if (logo) formData.append("logo", logo);
 
-      const res = await axios.put(
+      const res = await axios.post(
         `https://footballhub.azurewebsites.net/teams/${team.id}`,
         formData,
         {

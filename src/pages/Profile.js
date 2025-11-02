@@ -163,7 +163,7 @@ export default function PlayerDetail() {
 
     try {
       setLoadingDel(true);
-      const res = await axios.delete("https://footballhub.azurewebsites.net/profile", {
+      const res = await axios.post("https://footballhub.azurewebsites.net/profile", {
         withCredentials: true,
       });
 
@@ -815,7 +815,7 @@ export default function PlayerDetail() {
 
               setLoading(true);
               try {
-                const res = await axios.put("https://footballhub.azurewebsites.net/profile", data, {
+                const res = await axios.post("https://footballhub.azurewebsites.net/profile", data, {
                   withCredentials: true,
                   headers: { "Content-Type": "multipart/form-data" },
                 });

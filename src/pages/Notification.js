@@ -137,7 +137,7 @@ export default function NotificationPage() {
     try {
       setIsClearing(true);
 
-      const res = await axios.delete(
+      const res = await axios.post(
         `https://footballhub.azurewebsites.net/players/${currentPlayer.email}/notifications`,
         { withCredentials: true }
       );
@@ -250,7 +250,7 @@ export default function NotificationPage() {
     try {
       setProcessingMatch((prev) => ({ ...prev, [key]: true }));
 
-      const res = await axios.put(
+      const res = await axios.post(
         `https://footballhub.azurewebsites.net/matches/${notif.matchId}/response`,
         { action: "reject" },
         { withCredentials: true }
@@ -403,7 +403,7 @@ export default function NotificationPage() {
   const handleDelete = async (notifId) => {
     try {
       setDeleting((prev) => ({ ...prev, [notifId]: true }));
-      await axios.delete(
+      await axios.post(
         `https://footballhub.azurewebsites.net/players/${currentPlayer.email}/notifications/${notifId}`,
         { withCredentials: true }
       );
@@ -428,7 +428,7 @@ export default function NotificationPage() {
     try {
       setProcessing((prev) => ({ ...prev, [key]: true }));
 
-      const res = await axios.put(
+      const res = await axios.post(
         `https://footballhub.azurewebsites.net/teams/${teamId}/requests/${requester}`,
         { action },
         { withCredentials: true }
@@ -459,7 +459,7 @@ export default function NotificationPage() {
     try {
       setProcessing((prev) => ({ ...prev, [key]: true }));
 
-      const res = await axios.put(
+      const res = await axios.post(
         `https://footballhub.azurewebsites.net/profile/requests/${teamId}`,
         { action },
         { withCredentials: true }

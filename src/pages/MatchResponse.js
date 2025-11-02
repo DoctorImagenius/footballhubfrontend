@@ -76,14 +76,14 @@ export default function MatchResponse() {
     if (!valid) return toast.error("Some players don’t have enough points!");
     try {
       setLoading(true);
-      const res = await axios.put(
+      const res = await axios.post(
         `https://footballhub.azurewebsites.net/matches/${match.id}/response`,
         { action: "accept", playersSelected: selectedPlayers },
         { withCredentials: true }
       );
 
       if (res.data.success) {
-        await axios.delete(`https://footballhub.azurewebsites.net/players/${playerEmail}/notifications/${notifId}`, { withCredentials: true });
+        await axios.post(`https://footballhub.azurewebsites.net/players/${playerEmail}/notifications/${notifId}`, { withCredentials: true });
         // ✅ Update currentPlayer state (remove from notifications)
         setCurrentPlayer((prev) => ({
           ...prev,
