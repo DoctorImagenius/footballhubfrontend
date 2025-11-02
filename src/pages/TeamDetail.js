@@ -1477,7 +1477,7 @@ function EditTeamBox({ team, onUpdated, players }) {
   const handleDelete = async () => {
     try {
       setDeleting(true);
-      const res = await axios.post(`https://footballhub.azurewebsites.net/teams/${team.id}`, {},{
+      const res = await axios.post(`https://footballhub.azurewebsites.net/del-teams/${team.id}`, {},{
         withCredentials: true,
       });
 

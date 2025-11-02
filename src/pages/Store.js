@@ -114,7 +114,7 @@ export default function StorePage() {
     if (!selectedItemId) return;
     try {
       setSaving(true);
-      const res = await axios.post(`https://footballhub.azurewebsites.net/sell-items/${selectedItemId}`,{}, {
+      const res = await axios.post(`https://footballhub.azurewebsites.net/del-sell-items/${selectedItemId}`,{}, {
         withCredentials: true,
       });
       if (res.data.success) {
