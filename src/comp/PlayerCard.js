@@ -2,12 +2,12 @@ import {
   Card,
   CardContent,
   Typography,
-  CardMedia,
   Box,
   Divider,
   Rating,
   LinearProgress,
   Tooltip,
+  Avatar,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -45,7 +45,6 @@ export default function PlayerCard({ player }) {
   const maxStat = Math.max(...stats.map((s) => s.value ?? 0));
   const positionAbbr = positionMap[player.position?.toLowerCase()] || "ST";
 
-  // ✅ Overall Rating Calculation (agar 0 hai to average nikaal lo)
   let calculatedOverall = player.overalRating ?? 0;
   if (calculatedOverall === 0) {
     const values = stats.map((s) => s.value ?? 0);
@@ -77,38 +76,42 @@ export default function PlayerCard({ player }) {
           transform: "translateY(-5px)",
           boxShadow: "0 15px 30px rgba(0,0,0,0.8)",
         },
+        textAlign: "center",
       }}
     >
-      {/* Player Image */}
-      <CardMedia
-        component="img"
-        image={player.imageUrl || "https://via.placeholder.com/260x160"}
-        alt={player.name}
+      {/* Avatar Section */}
+      <Box
         sx={{
-          height: 200, // fixed height for consistency
-          width: "100%",
-          objectFit: "cover", // show full image without zoom
-          borderBottom: "3px solid rgba(255,255,255,0.1)",
-          transition: "transform 0.4s ease",
-          "&:hover": { transform: "scale(1.03)" }, // slight hover effect only
+          display: "flex",
+          justifyContent: "center",
+          position: "relative",
         }}
-      />
-
-
-      {/* Overall Rating & Position Badge */}
-      <Tooltip
-        title={`This is a ${positionAbbr} with an overall skills of ${calculatedOverall}%`}
       >
+        <Avatar
+          src={player.imageUrl || "https://via.placeholder.com/150"}
+          alt={player.name}
+          sx={{
+            width: 300,
+            height: 300,
+            borderRadius: "0px",
+            transition: "transform 0.3s ease",
+            "&:hover": { transform: "scale(1.05)" },
+          }}
+        />
+      </Box>
+
+      {/* Overall Badge */}
+      <Tooltip title={`This is a ${positionAbbr} with an overall skills of ${calculatedOverall}%`}>
         <Box
           sx={{
             position: "absolute",
-            top: 15,
-            left: 15,
+            top: 10,
+            left: 10,
             background: "rgba(0, 229, 255, 0.95)",
             color: "#111",
-            borderRadius: "50%",
-            width: 50,
-            height: 50,
+            borderRadius: "15px",
+            width: 45,
+            height: 45,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -117,10 +120,10 @@ export default function PlayerCard({ player }) {
             boxShadow: "0 3px 10px rgba(0,0,0,0.7)",
           }}
         >
-          <Typography sx={{ fontSize: "1.1rem" }}>
+          <Typography sx={{ fontSize: "1rem" }}>
             {calculatedOverall.toFixed(0)}
           </Typography>
-          <Typography sx={{ fontSize: "0.8rem" }}>{positionAbbr}</Typography>
+          <Typography sx={{ fontSize: "0.7rem" }}>{positionAbbr}</Typography>
         </Box>
       </Tooltip>
 
@@ -130,21 +133,19 @@ export default function PlayerCard({ player }) {
           <Box
             sx={{
               position: "absolute",
-              top: 15,
-              right: 15,
+              top: 10,
+              right: 10,
               background: "radial-gradient(circle at top, #FFD700, #b8860b)",
               color: "#111",
-              borderRadius: "50%",
-              width: 50,
-              height: 50,
+              borderRadius: "15px",
+              width: 45,
+              height: 45,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
               fontWeight: "bold",
-              //boxShadow: "0 3px 12px rgba(255, 243, 178, 1)",
               boxShadow: "0 3px 10px rgba(0,0,0,0.7)",
-
             }}
           >
             <Typography variant="caption" sx={{ fontSize: "0.65rem" }}>
@@ -158,7 +159,7 @@ export default function PlayerCard({ player }) {
       )}
 
       {/* Card Content */}
-      <CardContent sx={{ textAlign: "center", p: 2 }}>
+      <CardContent>
         <Typography
           variant="h6"
           fontWeight="bold"
@@ -166,10 +167,6 @@ export default function PlayerCard({ player }) {
           sx={{ textShadow: "1px 1px 5px rgba(0,0,0,0.7)" }}
         >
           {player.name}
-        </Typography>
-
-        <Typography variant="body2" color="gray">
-          {player.location}
         </Typography>
 
         <Typography
@@ -220,6 +217,7 @@ export default function PlayerCard({ player }) {
             </Box>
           ))}
         </Box>
+
         <Box
           sx={{
             mt: 1,
