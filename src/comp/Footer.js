@@ -52,7 +52,7 @@ const Footer = () => {
         </IconButton>
         <IconButton
           component="a"
-          href="https://www.instagram.com/imagenius1001"
+          href="https://www.instagram.com/imagenius_haroon"
           target="_blank"
           sx={{
             color: "#00e5ff",

@@ -269,7 +269,7 @@ export default function StorePage() {
 
         {/* Search Input */}
         <TextField
-          placeholder="🔍 Search trainers..."
+          placeholder="🔍 Search items..."
           variant="outlined"
           size="small"
           value={searchText}
