@@ -114,6 +114,7 @@ export default function TeamDetail() {
 
   // ==== Auto Fetch & Scroll (only if member) ====
   useEffect(() => {
+    if (isLogin === false) return; // ✅ only logged in users
     if (!team?.id) return;
     if (!team.teamPlayers?.includes(currentPlayer.email)) return; // ✅ only team members
 
@@ -819,8 +820,7 @@ export default function TeamDetail() {
 
       </Box>
       <Divider sx={{ my: 5, borderColor: "rgba(255,255,255,0.2)" }} />
-      <>
-        {team.teamPlayers?.includes(currentPlayer.email) ? (
+        {isLogin && team.teamPlayers?.includes(currentPlayer.email) ? (
           // ✅ Team Member: Show Chat Room
           <Box
             sx={{
@@ -1078,7 +1078,6 @@ export default function TeamDetail() {
             🔒 Join the team to access the chat room.
           </Typography>
         )}
-      </>
       <Divider sx={{ my: 5, mb: 10, borderColor: "rgba(255,255,255,0.2)" }} />
       <Dialog
         open={showInviteBox}
